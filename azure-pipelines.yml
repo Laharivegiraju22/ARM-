@@ -56,13 +56,13 @@ stages:
    displayName: 'Deploy WebApp'
  
    jobs:
-   - deployment: QA
+   - deployment: prod
      displayName: Blue Deployment
      pool: 
        vmImage: windows-latest
      variables:
      - group: 'Release'
-     environment: 'QA'
+     environment: 'prod'
      strategy:
       runOnce:
         deploy:
