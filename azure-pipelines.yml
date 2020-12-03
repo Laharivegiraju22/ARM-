@@ -67,43 +67,10 @@ stages:
       runOnce:
         deploy:
           steps:
-
-           - task: AzureRmWebAppDeployment@4
-             inputs:
-               ConnectionType: 'AzureRM'
-               azureSubscription: '$(azureSubscription)'
-               appType: 'webApp'
-               WebAppName: '$(WebAppName)'
-               deployToSlotOrASE: true
-               ResourceGroupName: '$(resourceGroupName)'
-               SlotName: 'staging'
-               packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
-               enableCustomDeployment: true
-               DeploymentType: 'webDeploy'
-               RemoveAdditionalFilesFlag: true
-               enableXmlVariableSubstitution: true
-             enabled: true 
-             
-           - task: AzureAppServiceSettings@1
-             inputs:
-               azureSubscription: '$(azureSubscription)'
-               appName: '$(WebAppName)'
-               slotName: '$(SlotName)'
-               resourceGroupName: '$(resourceGroupName)'
-               connectionStrings: |
-                [
-                  {
-                    "name": "$(ConnectionString1)",
-                    "value": "Server=tcp:$(ServerName),1433;Initial Catalog=$(DatabaseName);User ID=$(SqlUsername);Password=$(SqlPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-                    "type": "SQLServer",
-                    "slotSetting": false
-
-                  },
-                  {
-                    "name": "$(ConnectionString2)",
-                    "value": "Server=tcp:$(ServerName),1433;Initial Catalog=$(DatabaseName);User ID=$(SqlUsername);Password=$(SqlPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-                    "type": "SQLServer",
-                    "slotSetting": false
-
-                  }
-                ] 
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
+              appType: 'webApp'
+              WebAppName: 'lahari-dotnet-yamldeploy'
+              packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
