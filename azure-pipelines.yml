@@ -72,13 +72,14 @@ stages:
               artifactName: 'drop'
               itemPattern: '*.zip'
               downloadPath: '$(System.ArtifactsDirectory)'
+            enabled: false 
           - task: AzureRmWebAppDeployment@4
             inputs:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
               appType: 'webApp'
               WebAppName: 'lahari-dotnet-yamldeploy'
-              packageForLinux: '$(System.ArtifactsDirectory)/*.zip'
+              packageForLinux: '*/drop/*.zip'
               enableCustomDeployment: true
               DeploymentType: 'webDeploy'
               RemoveAdditionalFilesFlag: true
