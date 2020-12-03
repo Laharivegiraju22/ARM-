@@ -9,8 +9,6 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-
-
 stages:
  
  - stage: Build_WebApp
