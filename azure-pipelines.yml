@@ -9,15 +9,16 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+
 
 stages:
  
  - stage: Build_WebApp
    displayName: 'Deploy WebApp'
+   variables:
+       solution: '**/*.sln'
+       buildPlatform: 'Any CPU'
+       buildConfiguration: 'Release'
    jobs:
    - job: buildjob
      steps:
