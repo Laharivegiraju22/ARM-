@@ -59,8 +59,7 @@ stages:
      displayName: Blue Deployment
      pool: 
        vmImage: windows-latest
-     variables:
-     - group: 'Release'
+   
      environment: 'prod'
      strategy:
       runOnce:
