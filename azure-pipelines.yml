@@ -79,7 +79,7 @@ stages:
               azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
               appType: 'webApp'
               WebAppName: 'lahari-dotnet-yamldeploy'
-              packageForLinux: 'D:\a\1\drop\pipeline.zip'
+              packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
               enableCustomDeployment: true
               DeploymentType: 'webDeploy'
               RemoveAdditionalFilesFlag: true
