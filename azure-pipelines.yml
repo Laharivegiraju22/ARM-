@@ -74,3 +74,8 @@ stages:
               appType: 'webApp'
               WebAppName: 'lahari-dotnet-yamldeploy'
               packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+              enableCustomDeployment: true
+              DeploymentType: 'webDeploy'
+              RemoveAdditionalFilesFlag: true
+              enableXmlVariableSubstitution: true
+            enabled: true 
