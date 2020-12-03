@@ -16,7 +16,7 @@ variables:
 
 stages:
  
- - stage: Deploy_WebApp
+ - stage: Build_WebApp
    displayName: 'Deploy WebApp'
    jobs:
    - job: buildjob
