@@ -14,35 +14,96 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-jobs:
-- job: buildjob
-  steps:
-  - task: NuGetToolInstaller@1
+stages:
+ 
+ - stage: Deploy_WebApp
+   displayName: 'Deploy WebApp'
+   jobs:
+   - job: buildjob
+   steps:
+   - task: NuGetToolInstaller@1
 
-  - task: NuGetCommand@2
-    inputs:
-      restoreSolution: '$(solution)'
+   - task: NuGetCommand@2
+     inputs:
+       restoreSolution: '$(solution)'
 
-  - task: VSBuild@1
-    inputs:
-      solution: '$(solution)'
-      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
+   - task: VSBuild@1
+     inputs:
+       solution: '$(solution)'
+       msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+       platform: '$(buildPlatform)'
+       configuration: '$(buildConfiguration)'
 
-  - task: VSTest@2
-    inputs:
-      platform: '$(buildPlatform)'
-      configuration: '$(buildConfiguration)'
+   - task: VSTest@2
+     inputs:
+       platform: '$(buildPlatform)'
+       configuration: '$(buildConfiguration)'
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'publish'
-      publishWebProjects: true
-      arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+   - task: DotNetCoreCLI@2
+     inputs:
+       command: 'publish'
+       publishWebProjects: true
+       arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
+   - task: PublishBuildArtifacts@1
+     inputs:
+       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+       ArtifactName: 'drop'
+       publishLocation: 'Container'
+
+
+ - stage: Deploy_WebApp
+   displayName: 'Deploy WebApp'
+ 
+   jobs:
+   - deployment: QA
+     displayName: Blue Deployment
+     pool: 
+       vmImage: windows-latest
+     variables:
+     - group: 'Release'
+     environment: 'QA'
+     strategy:
+      runOnce:
+        deploy:
+          steps:
+
+           - task: AzureRmWebAppDeployment@4
+             inputs:
+               ConnectionType: 'AzureRM'
+               azureSubscription: '$(azureSubscription)'
+               appType: 'webApp'
+               WebAppName: '$(WebAppName)'
+               deployToSlotOrASE: true
+               ResourceGroupName: '$(resourceGroupName)'
+               SlotName: 'staging'
+               packageForLinux: '$(Pipeline.Workspace)/**/*.zip'
+               enableCustomDeployment: true
+               DeploymentType: 'webDeploy'
+               RemoveAdditionalFilesFlag: true
+               enableXmlVariableSubstitution: true
+             enabled: true 
+             
+           - task: AzureAppServiceSettings@1
+             inputs:
+               azureSubscription: '$(azureSubscription)'
+               appName: '$(WebAppName)'
+               slotName: '$(SlotName)'
+               resourceGroupName: '$(resourceGroupName)'
+               connectionStrings: |
+                [
+                  {
+                    "name": "$(ConnectionString1)",
+                    "value": "Server=tcp:$(ServerName),1433;Initial Catalog=$(DatabaseName);User ID=$(SqlUsername);Password=$(SqlPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+                    "type": "SQLServer",
+                    "slotSetting": false
+
+                  },
+                  {
+                    "name": "$(ConnectionString2)",
+                    "value": "Server=tcp:$(ServerName),1433;Initial Catalog=$(DatabaseName);User ID=$(SqlUsername);Password=$(SqlPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+                    "type": "SQLServer",
+                    "slotSetting": false
+
+                  }
+                ] 
