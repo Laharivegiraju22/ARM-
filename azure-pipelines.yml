@@ -14,8 +14,8 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-job:
-  name: buildjob
+jobs:
+- job: buildjob
   steps:
   - task: NuGetToolInstaller@1
 
