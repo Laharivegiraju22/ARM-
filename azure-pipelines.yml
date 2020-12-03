@@ -65,21 +65,14 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadBuildArtifacts@0
-            inputs:
-              buildType: 'specific'
-              project: 'be43a9ad-c530-4647-ba19-5ce0c5342f67'
-              pipeline: '4'
-              buildVersionToDownload: 'latest'
-              downloadType: 'single'
-              downloadPath: '$(System.ArtifactsDirectory)'
+          
           - task: AzureRmWebAppDeployment@4
             inputs:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
               appType: 'webApp'
               WebAppName: 'lahari-dotnet-yamldeploy'
-              packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
+              packageForLinux: '$(Build.ArtifactStagingDirectory)/*.zip'
               enableCustomDeployment: true
               DeploymentType: 'webDeploy'
               RemoveAdditionalFilesFlag: true
