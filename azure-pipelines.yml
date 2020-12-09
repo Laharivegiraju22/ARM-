@@ -51,10 +51,12 @@ stages:
          msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
          platform: '$(buildPlatform)'
          configuration: '$(buildConfiguration)'
-     - task: SonarCloudAnalyze@1
-     - task: SonarCloudPublish@1
-       inputs:
-         pollingTimeoutSec: '300'
+     - ${{ if eq(parameters.sonar, true) }}:
+       - task: SonarCloudAnalyze@1
+     - ${{ if eq(parameters.sonar, true) }}:
+       - task: SonarCloudPublish@1
+         inputs:
+           pollingTimeoutSec: '300'
      - task: VSTest@2
        inputs:
          platform: '$(buildPlatform)'
