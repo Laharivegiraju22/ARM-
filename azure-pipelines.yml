@@ -1,12 +1,18 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
+parameters:
+  - name: sonar
+    displayName: Do you want sonar to analyze for this build?
+    default: true
+    values:
+      - true
+      - false
+    
 trigger:
-- main
-- master
-
+ branches:
+   include:
+     - master
+ paths:
+   exclude:
+     - azure-pipelines.yaml
 pool:
   vmImage: 'windows-latest'
 
@@ -26,13 +32,15 @@ stages:
      - task: NuGetCommand@2
        inputs:
          restoreSolution: '$(solution)'
-     - task: SonarCloudPrepare@1
-       inputs:
-         SonarCloud: 'lahari-sonarcloud-connect'
-         organization: 'lahariorg'
-         scannerMode: 'MSBuild'
-         projectKey: '789b25b1c0e5ba0a1b920e5b179c6d5f2e7b0a61'
-         projectName: 'lahari-demo-p1'
+     - ${{ if eq(parameters.sonar, true) }}:
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'lahari-sonarcloud-connect'
+              organization: 'lahariorg'
+              scannerMode: 'MSBuild'
+              projectKey: '789b25b1c0e5ba0a1b920e5b179c6d5f2e7b0a61'
+              projectName: 'lahari-demo-p1'
+             enabled: true
     
 
      - task: VSBuild@1
@@ -96,4 +104,4 @@ stages:
               DeploymentType: 'webDeploy'
               RemoveAdditionalFilesFlag: true
               enableXmlVariableSubstitution: true
-            enabled: true 
+            enabled: false 
