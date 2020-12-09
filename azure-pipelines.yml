@@ -32,15 +32,17 @@ stages:
      - task: NuGetCommand@2
        inputs:
          restoreSolution: '$(solution)'
+         
      - ${{ if eq(parameters.sonar, true) }}:
-          - task: SonarCloudPrepare@1
-            inputs:
-              SonarCloud: 'lahari-sonarcloud-connect'
-              organization: 'lahariorg'
-              scannerMode: 'MSBuild'
-              projectKey: '789b25b1c0e5ba0a1b920e5b179c6d5f2e7b0a61'
-              projectName: 'lahari-demo-p1'
-             enabled: true
+       - task: SonarCloudPrepare@1
+         displayName: sonarcloud Preparations
+         inputs:
+           SonarCloud: 'lahari-sonarcloud-connect'
+           organization: 'lahariorg'
+           scannerMode: 'MSBuild'
+           projectKey: '789b25b1c0e5ba0a1b920e5b179c6d5f2e7b0a61'
+           projectName: 'lahari-demo-p1'
+         enabled: true
     
 
      - task: VSBuild@1
