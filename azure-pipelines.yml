@@ -104,7 +104,7 @@ stages:
               azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
               appType: 'webApp'
               WebAppName: 'larmapp'
-              packageForLinux: '$(Pipeline.Workspace)/**/pipeline.zip'''
+              packageForLinux: 'D:\a\1\drop\pipeline.zip'
               enableCustomDeployment: true
               DeploymentType: 'webDeploy'
               RemoveAdditionalFilesFlag: true
