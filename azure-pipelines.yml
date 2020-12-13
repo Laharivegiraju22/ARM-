@@ -96,7 +96,7 @@ stages:
               artifactName: 'drop'
               itemPattern: '*.zip'
               downloadPath: '$(System.ArtifactsDirectory)'
-            enabled: false 
+            enabled: false
           
           - task: AzureRmWebAppDeployment@4
             inputs:
@@ -109,4 +109,4 @@ stages:
               DeploymentType: 'webDeploy'
               RemoveAdditionalFilesFlag: true
               enableXmlVariableSubstitution: true
-            enabled: false 
+            enabled: true
