@@ -64,10 +64,10 @@ stages:
          ArtifactName: 'drop'
          publishLocation: 'Container'
 
- - stage: deploy infra
+ - stage: deployinfra
    displayName: 'deploying the infrastructure'
    jobs:
-   - job: buildjob
+   - job: infrajob
      steps:
      - task: AzureResourceManagerTemplateDeployment@3
        inputs:
