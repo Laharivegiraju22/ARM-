@@ -71,15 +71,15 @@ stages:
      steps:
      - task: AzureResourceManagerTemplateDeployment@3
        inputs:
-         deploymentScope: 'Resource Group'
-         azureResourceManagerConnection: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
-         subscriptionId: '60584be9-98a4-4707-be50-badf2b4fb922'
-         action: 'Create Or Update Resource Group'
-         resourceGroupName: 'lahariRG'
-         location: 'East US'
-         templateLocation: 'URL of the file'
-         csmFileLink: 'https://dev.azure.com/LahariOrg/lahari-demo-p1/_git/dotnet-application?path=%2FARM%20templates%2FdotnetWebappARM.json&version=GBmaster'
-         deploymentMode: 'Complete'
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
+        subscriptionId: '60584be9-98a4-4707-be50-badf2b4fb922'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'lahariRG'
+        location: 'East US'
+        templateLocation: 'Linked artifact'
+        csmFile: 'ARM templates/dotnetWebappARM.json'
+        deploymentMode: 'Incremental'
 
  - stage: Deploy_WebApp
    displayName: 'Deployment of WebApp'
