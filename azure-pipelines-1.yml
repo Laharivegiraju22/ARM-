@@ -1,0 +1,118 @@
+parameters:
+  - name: sonar
+    displayName: Do you want sonar to analyze for this build?
+    default: true
+    values:
+      - true
+      - false
+  - name: infra
+    displayName: Do you want to deploy the webapp using ARM?
+    default: false
+    values:
+      - true
+      - false
+    
+trigger:
+ branches:
+   exclude:
+     - master
+ paths:
+   exclude:
+     - azure-pipelines.yaml
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+ 
+ - stage: Build_WebApp
+   displayName: 'build WebApp'
+   variables:
+       solution: '**/*.sln'
+       buildPlatform: 'Any CPU'
+       buildConfiguration: 'Release'
+   jobs:
+   - job: buildjob
+     steps:
+     - task: NuGetToolInstaller@1
+
+     - task: NuGetCommand@2
+       inputs:
+         restoreSolution: '$(solution)'
+         
+
+
+     - task: VSBuild@1
+       inputs:
+         solution: '$(solution)'
+         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+         platform: '$(buildPlatform)'
+         configuration: '$(buildConfiguration)'
+     - task: VSTest@2
+       inputs:
+         platform: '$(buildPlatform)'
+         configuration: '$(buildConfiguration)'
+
+     - task: DotNetCoreCLI@2
+       inputs:
+         command: 'publish'
+         publishWebProjects: true
+         arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+
+     - task: PublishBuildArtifacts@1
+       inputs:
+         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+         ArtifactName: 'drop'
+         publishLocation: 'Container'
+
+ - stage: deploy infra
+   displayName: 'deploying the infrastructure'
+   jobs:
+   - job: buildjob
+     steps:
+     - task: AzureResourceManagerTemplateDeployment@3
+       inputs:
+         deploymentScope: 'Resource Group'
+         azureResourceManagerConnection: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
+         subscriptionId: '60584be9-98a4-4707-be50-badf2b4fb922'
+         action: 'Create Or Update Resource Group'
+         resourceGroupName: 'lahariRG'
+         location: 'East US'
+         templateLocation: 'URL of the file'
+         csmFileLink: 'https://dev.azure.com/LahariOrg/lahari-demo-p1/_git/dotnet-application?path=%2FARM%20templates%2FdotnetWebappARM.json&version=GBmaster'
+         deploymentMode: 'Complete'
+
+ - stage: Deploy_WebApp
+   displayName: 'Deployment of WebApp'
+ 
+   jobs:
+   - deployment: prod
+     displayName: Blue Deployment
+     pool: 
+       vmImage: windows-latest
+   
+     environment: 'prod'
+     strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop'
+              itemPattern: '*.zip'
+              downloadPath: '$(System.ArtifactsDirectory)'
+            enabled: false
+          
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
+              appType: 'webApp'
+              WebAppName: 'larmapp'
+              packageForLinux: 'D:\a\1\drop\pipeline.zip'
+              enableCustomDeployment: true
+              DeploymentType: 'webDeploy'
+              RemoveAdditionalFilesFlag: true
+              enableXmlVariableSubstitution: true
+            enabled: true
