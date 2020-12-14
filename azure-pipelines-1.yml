@@ -91,6 +91,12 @@ stages:
          csmFile: 'ARM templates/dotnetWebappARM.json'
          overrideParameters: '-hostingPlanName ${{parameters.hostingPlanName}},-webAppName ${{parameters.webAppName}}'
          deploymentMode: 'Incremental'
+     - task: ARM Outputs@6
+       inputs:
+         ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
+         ConnectedServiceNameARM: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
+         resourceGroupName: 'lahariRG'
+         whenLastDeploymentIsFailed: 'fail'
 
  - stage: Deploy_WebApp
    displayName: 'Deployment of WebApp'
