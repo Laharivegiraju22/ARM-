@@ -81,18 +81,19 @@ stages:
    jobs:
    - job: infrajob
      steps:
-     - task: AzureResourceManagerTemplateDeployment@3
-       inputs:
-         deploymentScope: 'Resource Group'
-         azureResourceManagerConnection: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
-         subscriptionId: '60584be9-98a4-4707-be50-badf2b4fb922'
-         action: 'Create Or Update Resource Group'
-         resourceGroupName: 'lahariRG'
-         location: 'East US'
-         templateLocation: 'Linked artifact'
-         csmFile: 'ARM templates/dotnetWebappARM.json'
-         overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
-         deploymentMode: 'Incremental'
+     - ${{ if eq(parameters.infra, true) }}:
+       - task: AzureResourceManagerTemplateDeployment@3
+         inputs:
+           deploymentScope: 'Resource Group'
+           azureResourceManagerConnection: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
+           subscriptionId: '60584be9-98a4-4707-be50-badf2b4fb922'
+           action: 'Create Or Update Resource Group'
+           resourceGroupName: 'lahariRG'
+           location: 'East US'
+           templateLocation: 'Linked artifact'
+           csmFile: 'ARM templates/dotnetWebappARM.json'
+           overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
+           deploymentMode: 'Incremental'
      - task: ARM Outputs@6
        inputs:
          ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
