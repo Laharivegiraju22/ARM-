@@ -14,11 +14,13 @@ parameters:
   - name: hostingPlanName
     displayName: hostingPlanName
     type: string
+    default: myarmapp2424
     
     
   - name: webAppName
     displayName: webappName
     type: string
+    default: mywebapp2424
     
 
     
@@ -89,7 +91,7 @@ stages:
          location: 'East US'
          templateLocation: 'Linked artifact'
          csmFile: 'ARM templates/dotnetWebappARM.json'
-         overrideParameters: '-hostingPlanName ${{parameters.hostingPlanName}},-webAppName ${{parameters.webAppName}}'
+         overrideParameters: '-hostingPlanName ${{parameters.hostingPlanName}} -webAppName ${{parameters.webAppName}}'
          deploymentMode: 'Incremental'
      - task: ARM Outputs@6
        inputs:
