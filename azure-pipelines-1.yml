@@ -93,7 +93,7 @@ stages:
            templateLocation: 'Linked artifact'
            csmFile: 'ARM templates/dotnetWebappARM.json'
            overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
-           deploymentMode: 'Incremental'
+           deploymentMode: 'Complete'
     
 
  - stage: Deploy_WebApp
