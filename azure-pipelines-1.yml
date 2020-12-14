@@ -13,8 +13,13 @@ parameters:
       - false
   - name: hostingPlanName
     displayName: hostingPlanName
+    type: string
+    default:""
+    
   - name: webAppName
     displayName: webappName
+    type: string
+    default:""
 
     
 trigger:
