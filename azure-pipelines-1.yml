@@ -11,11 +11,10 @@ parameters:
     values:
       - true
       - false
-  - ${{ if eq(parameters.infra, true) }}:
-    - name: hostingPlanName
-      displayName: hostingPlanName
-    - name: webAppName
-      displayName: webappName
+  - name: hostingPlanName
+    displayName: hostingPlanName
+  - name: webAppName
+    displayName: webappName
 
     
 trigger:
@@ -85,7 +84,7 @@ stages:
          location: 'East US'
          templateLocation: 'Linked artifact'
          csmFile: 'ARM templates/dotnetWebappARM.json'
-         overrideParameters: '-hostingPlanName appdotnet4040,-webAppName armwebappl'
+         overrideParameters: '-hostingPlanName $(hostingPlanName),-webAppName $(webAppName)'
          deploymentMode: 'Incremental'
 
  - stage: Deploy_WebApp
