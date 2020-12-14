@@ -93,7 +93,7 @@ stages:
            templateLocation: 'Linked artifact'
            csmFile: 'ARM templates/dotnetWebappARM.json'
            overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
-           deploymentMode: 'Incremental'
+           deploymentMode: 'complete'
        - task: Bash@3
          inputs:
            targetType: 'inline'
