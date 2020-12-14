@@ -89,7 +89,7 @@ stages:
          location: 'East US'
          templateLocation: 'Linked artifact'
          csmFile: 'ARM templates/dotnetWebappARM.json'
-         overrideParameters: '-hostingPlanName parameters.hostingPlanName,-webAppName parameters.webAppName'
+         overrideParameters: '-hostingPlanName ${{parameters.hostingPlanName}},-webAppName ${{parameters.webAppName}}'
          deploymentMode: 'Incremental'
 
  - stage: Deploy_WebApp
@@ -120,7 +120,7 @@ stages:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
               appType: 'webApp'
-              WebAppName: 'parameters.webAppName'
+              WebAppName: '${{parameters.webAppName}}'
               packageForLinux: 'D:\a\1\drop\pipeline.zip'
               enableCustomDeployment: true
               DeploymentType: 'webDeploy'
