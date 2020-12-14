@@ -11,16 +11,16 @@ parameters:
     values:
       - true
       - false
-  - name: hostingPlanName
-    displayName: hostingPlanName
-    type: string
-    default: myarmapp2424
+  # - name: hostingPlanName
+  #   displayName: hostingPlanName
+  #   type: string
+  #   default: myarmapp2424
     
     
-  - name: webAppName
-    displayName: webappName
-    type: string
-    default: mywebapp2424
+  # - name: webAppName
+  #   displayName: webappName
+  #   type: string
+  #   default: mywebapp2424
     
 
     
@@ -91,7 +91,7 @@ stages:
          location: 'East US'
          templateLocation: 'Linked artifact'
          csmFile: 'ARM templates/dotnetWebappARM.json'
-         overrideParameters: '-hostingPlanName ${{parameters.hostingPlanName}} -webAppName ${{parameters.webAppName}}'
+         overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
          deploymentMode: 'Incremental'
      - task: ARM Outputs@6
        inputs:
@@ -128,7 +128,7 @@ stages:
               ConnectionType: 'AzureRM'
               azureSubscription: 'Free Trial (60584be9-98a4-4707-be50-badf2b4fb922)'
               appType: 'webApp'
-              WebAppName: '${{parameters.webAppName}}'
+              WebAppName: '$(webAppName)'
               packageForLinux: 'D:\a\1\drop\pipeline.zip'
               enableCustomDeployment: true
               DeploymentType: 'webDeploy'
