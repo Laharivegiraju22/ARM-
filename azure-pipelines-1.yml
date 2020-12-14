@@ -98,18 +98,21 @@ stages:
 
  - stage: Deploy_WebApp
    displayName: 'Deployment of WebApp'
- 
+   
    jobs:
    - deployment: prod
      displayName: Blue Deployment
      pool: 
        vmImage: windows-latest
-   
+     
      environment: 'prod'
      strategy:
       runOnce:
         deploy:
           steps:
+          - task: Delay@1
+            inputs:
+              delayForMinutes: '0.10'
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
