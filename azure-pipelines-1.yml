@@ -95,9 +95,8 @@ stages:
            overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
            deploymentMode: 'Incremental'
        - task: Delay@1
-         inputs:
-           delayForMinutes: '0.30'
-
+            inputs:
+              delayForMinutes: '0.10'
  - stage: Deploy_WebApp
    displayName: 'Deployment of WebApp'
    
@@ -112,9 +111,7 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: Delay@1
-            inputs:
-              delayForMinutes: '0.10'
+          
           - task: DownloadBuildArtifacts@0
             inputs:
               buildType: 'current'
