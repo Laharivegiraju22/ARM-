@@ -94,9 +94,7 @@ stages:
            csmFile: 'ARM templates/dotnetWebappARM.json'
            overrideParameters: '-hostingPlanName $(hostingPlanName) -webAppName $(webAppName)'
            deploymentMode: 'Incremental'
-       - task: Delay@1
-            inputs:
-              delayForMinutes: '0.10'
+           
  - stage: Deploy_WebApp
    displayName: 'Deployment of WebApp'
    
