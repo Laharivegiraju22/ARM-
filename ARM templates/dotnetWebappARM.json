@@ -6,11 +6,11 @@
       "type": "string",
       "minLength": 3,
       "maxLength": 24,
-      "value":"appdotnet4040"
+     "defaultValue":"appdotnet4040"
     },
     "webAppName": {
     "type": "string",
-    "value": "dotnetfromad" 
+    "defaultValue": "dotnetfromad" 
     }
 	},
     "functions": [],
